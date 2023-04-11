@@ -30,8 +30,9 @@ closingelement.addEventListener('click', () => {
 /* When the submit button is clicked the input value is assigned to 
 the local database by the POST Method*/
 submit.addEventListener("click", () => {
-    console.log(submit.innerText);
-    if (titleInput.value !== "" || description.value !== "") {
+    // console.log(submit.innerText);
+    /*Checking if the input value is emt or not */
+    if (titleInput.value.trim() !== "" && description.value.trim() !== "") {
         if (submit.innerText == "Submit") {
 
             fetch("http://localhost:3000/posts", {
@@ -50,8 +51,11 @@ submit.addEventListener("click", () => {
             submit.innerText = "update"
         }
     }
+
     else {
-        alert("please enter the value")
+        alert("Please enter the values")
+        
+
     }
 
 
@@ -100,12 +104,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 datediv.appendChild(date)
                 let icons = document.createElement("button")
                 icons.setAttribute("class", "icons")
-                icons.setAttribute("id", element.id)
-                icons.innerHTML = `<i class="fa fa-ellipsis-v option more" aria-hidden="true"></i>`;
+                icons.setAttribute("data-set", element.id)
+                icons.innerHTML = `<i class="fa fa-ellipsis-v option more" data-set="${element.id}" aria-hidden="true"></i>`;
 
                 let options = document.createElement("div")
                 options.setAttribute("class", "opt")
-                options.setAttribute("id", element.id)
+                options.setAttribute("data-set", element.id)
 
                 let editicon = document.createElement("div")
                 editicon.setAttribute("data-set", element.id)
@@ -130,9 +134,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 boxdiv.appendChild(options)
                 divboxes.appendChild(boxdiv)
 
-                icons.addEventListener("click", (e) => {
-                    options.style.visibility = "visible"
-                })
+
                 /* The delete icon delete the values in DB with the usage of DELETE method
                 by getting the id value*/
                 deleteicon.addEventListener("click", (e) => {
@@ -162,31 +164,59 @@ window.addEventListener("DOMContentLoaded", () => {
                             description.value = update.description
                         })
                 })
-                  /* The submit button works if the innerText is assigned to Update
-                  the values in DB with the usage of PUT method
-                  by getting the id value*/
+                /* The submit button works if the innerText is assigned to Update
+                the values in DB with the usage of PUT method
+                by getting the id value*/
                 submit.addEventListener("click", (e) => {
-                    if (submit.innerText == "Update") {
-                        let updateid = e.target.dataset.set
-                        console.log(updateid)
-                        fetch(`http://localhost:3000/posts/${updateid}`, {
-                            method: "PUT",
-                            body: JSON.stringify({
-                                "title": titleInput.value,
-                                "description": description.value
-                            }),
-                            headers: {
-                                'Content-type': 'application/json',
-                            }
-                        })
-                        titleInput.value = "";
-                        description.value = ""
-                        submit.innerText = "Submit"
+                    if (titleInput.value.trim() !== "" && description.value.trim() !== "") {
+                        if (submit.innerText == "Update") {
+                            let updateid = e.target.dataset.set
+                            console.log(updateid)
+                            fetch(`http://localhost:3000/posts/${updateid}`, {
+    
+                                method: "PUT",
+    
+                                body: JSON.stringify({
+                                    "title": titleInput.value,
+                                    "description": description.value
+                                }),
+                                headers: {
+                                    'Content-type': 'application/json',
+                                }
+                            })
+    
+                            titleInput.value = "";
+                            description.value = ""
+                            submit.innerText = "Submit"
+                        }
                     }
+                   
                 })
 
-           })
+            })
         })
 })
 
 /* ---------------------------------------------------------------------------------------- */
+
+window.addEventListener("click", (e) => {
+    console.log(e.target)
+    if (e.target.classList.contains("more") || e.target.classList.contains("icons")) {
+        let opt = document.querySelectorAll(".opt")
+        opt.forEach((element) => {
+            if (element.dataset.set == e.target.dataset.set) {
+                element.style.visibility = "visible"
+            }
+            else {
+                element.style.visibility = "hidden"
+            }
+        })
+    }
+    else {
+        let opt = document.querySelectorAll(".opt")
+        opt.forEach((ele) => {
+            ele.style.visibility = "hidden"
+
+        })
+    }
+})

@@ -86,9 +86,7 @@ textarea.decription {
   padding-top: 47px;
 }
 
-body {
-  background-color: #ededf7;
-}
+
 
 .overlay {
   position: fixed;
@@ -171,13 +169,20 @@ input.title {
   visibility: visible;
 }
 .submit{
-  background: blue;
-  border: none;
+  cursor: pointer;
+  background: #207bf1;
+  border-color: antiquewhite;  
   outline: none;
   width: 270px;
   height: 30px;
   color: white;
   border-radius: 3px;
+}
+.submit:hover {
+  cursor: pointer;
+  background-color: white;
+  border-color: #207bf1;
+  color: #207bf1;
 }
 label{
   font-weight: bold ;
@@ -205,12 +210,13 @@ h3{
 }
 
 
+
 body{
 
   font-style: italic;
   color: #181414;
 
-  background-color: rgb(255 248 248);
+  background-color:#edf5ff;
 }
 
 
