@@ -7,8 +7,12 @@ const overlay = document.querySelector(".overlay")
 
 const divboxes = document.querySelector(".mainbox")
 const description = document.querySelector(".decription")
+const submit = document.querySelector(".submit")
 
 
+
+// adding funtion for showing and removing loaders
+/* ---------------------------------------------------------------------------------------- */
 addingelement.addEventListener("click", () => {
     overlay.classList.add("overlay1")
 
@@ -21,23 +25,21 @@ closingelement.addEventListener('click', () => {
     submit.innerText = "Submit"
 
 })
+/* ---------------------------------------------------------------------------------------- */
 
-
-
-const submit = document.querySelector(".submit")
-
-
+/* When the submit button is clicked the input value is assigned to 
+the local database by the POST Method*/
 submit.addEventListener("click", () => {
     console.log(submit.innerText);
-    if(titleInput.value !== "" || description.value !== ""){
+    if (titleInput.value !== "" || description.value !== "") {
         if (submit.innerText == "Submit") {
 
             fetch("http://localhost:3000/posts", {
                 method: 'POST',
                 body: JSON.stringify({
-                    title:`${titleInput.value}`,
-                    description:`${description.value}`
-    
+                    title: `${titleInput.value}`,
+                    description: `${description.value}`
+
                 }),
                 headers: {
                     'Content-type': 'application/json',
@@ -48,17 +50,16 @@ submit.addEventListener("click", () => {
             submit.innerText = "update"
         }
     }
-    else{
+    else {
         alert("please enter the value")
     }
 
 
 })
 
+/* ---------------------------------------------------------------------------------------- */
 
-
-
-
+/*The window refreshe and it fetches he local database with using the fetch */
 window.addEventListener("DOMContentLoaded", () => {
     fetch("http://localhost:3000/posts")
         .then(res => res.json())
@@ -66,6 +67,7 @@ window.addEventListener("DOMContentLoaded", () => {
             json.forEach(element => {
                 let boxdiv = document.createElement("div")
                 boxdiv.setAttribute("class", "data")
+
 
                 let titlediv = document.createElement("div")
                 let title = document.createElement("h3")
@@ -78,7 +80,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 let paradiv = document.createElement("div")
                 paradiv.setAttribute("class", "paradiv")
                 let descrip = document.createElement("article")
-                descrip.setAttribute("class","description")
+                descrip.setAttribute("class", "description")
                 descrip.innerText = `${element.description}`
                 paradiv.appendChild(descrip)
                 let line2 = document.createElement("div")
@@ -98,10 +100,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 datediv.appendChild(date)
                 let icons = document.createElement("button")
                 icons.setAttribute("class", "icons")
+                icons.setAttribute("id", element.id)
                 icons.innerHTML = `<i class="fa fa-ellipsis-v option more" aria-hidden="true"></i>`;
 
                 let options = document.createElement("div")
                 options.setAttribute("class", "opt")
+                options.setAttribute("id", element.id)
 
                 let editicon = document.createElement("div")
                 editicon.setAttribute("data-set", element.id)
@@ -118,27 +122,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 footerdiv.appendChild(datediv)
                 footerdiv.appendChild(icons)
-                // footerdiv.appendChild(editicon)
-                // footerdiv.appendChild(deleteicon)
-
-
-
-
                 boxdiv.appendChild(titlediv)
                 boxdiv.appendChild(line1)
                 boxdiv.appendChild(paradiv)
                 boxdiv.appendChild(line2)
                 boxdiv.appendChild(footerdiv)
                 boxdiv.appendChild(options)
-
-
-
-
                 divboxes.appendChild(boxdiv)
 
-                icons.addEventListener("click",(e)=>{
+                icons.addEventListener("click", (e) => {
                     options.style.visibility = "visible"
                 })
+                /* The delete icon delete the values in DB with the usage of DELETE method
+                by getting the id value*/
                 deleteicon.addEventListener("click", (e) => {
 
                     let deleteid = e.target.dataset.set
@@ -150,7 +146,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     })
 
                 })
-
+                /* The edit icon Gets the value in DB and show it on UI*/
                 editicon.addEventListener("click", (e) => {
                     overlay.classList.add("overlay1")
                     submit.innerText = "Update"
@@ -160,59 +156,37 @@ window.addEventListener("DOMContentLoaded", () => {
                         .then(res => res.json())
                         .then(update => {
                             // console.log(update)
-                            submit.setAttribute("data-set",update.id)
+                            submit.setAttribute("data-set", update.id)
                             // console.log(submit);
                             titleInput.value = update.title
                             description.value = update.description
                         })
                 })
-                submit.addEventListener("click",(e)=>{
-                        if (submit.innerText == "Update") {
-                            let updateid = e.target.dataset.set
-                            console.log(updateid)
-                            fetch(`http://localhost:3000/posts/${updateid}`,{
-                                method:"PUT",
-                                body:JSON.stringify({
-                                    "title":titleInput.value,
-                                    "description":description.value
-                                }),
-                                headers: {
-                                    'Content-type': 'application/json',
-                                }
-                            })
-                            titleInput.value = "";
-                            description.value = ""
-                            submit.innerText = "Submit"
-                        }
-                    
-
+                  /* The submit button works if the innerText is assigned to Update
+                  the values in DB with the usage of PUT method
+                  by getting the id value*/
+                submit.addEventListener("click", (e) => {
+                    if (submit.innerText == "Update") {
+                        let updateid = e.target.dataset.set
+                        console.log(updateid)
+                        fetch(`http://localhost:3000/posts/${updateid}`, {
+                            method: "PUT",
+                            body: JSON.stringify({
+                                "title": titleInput.value,
+                                "description": description.value
+                            }),
+                            headers: {
+                                'Content-type': 'application/json',
+                            }
+                        })
+                        titleInput.value = "";
+                        description.value = ""
+                        submit.innerText = "Submit"
+                    }
                 })
 
-
-
-            })
-
+           })
         })
-
-
 })
 
-
-
-
-
-// for (let p = 0; p < iconoption.length; p++) {
-                    
-
-//     // iconmenu[i].addEventListener("click", () => {
-//     //     iconmenu[i].classList.add("black")
-//     //     if (iconmenu[i].classList.contains("black")) {
-//     //         iconoption[i].classList.add("visible")
-//     //         iconmenu[i].classList.remove("black")
-//     //     }
-
-//     //     else {
-//     //         iconoption[i].classList.remove("visible")
-//     //     }
-//     // })
-// }
+/* ---------------------------------------------------------------------------------------- */
